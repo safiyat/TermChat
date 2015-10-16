@@ -29,18 +29,12 @@ int main()
 {
 	void *shm[2];
 	struct user *usr[2];
-	int me, you, shmid[2],  y=1, end=1, j, name, ch, prex, prey;
+	int me, you, shmid[2],  y=1, /*end=1,*/ j, name, ch, prex, prey;
 	char buf[SIZE];
-	
-	
-	
-	
 	
 	shm[0]=shm[1]=(void *)0;
 	usr[0]=usr[1]=(struct user *)NULL;
 	name=-1;
-	
-	
 	
 	shmid[0]=shmget((key_t)1234, sizeof(struct user), 0666|IPC_CREAT);
 	shmid[1]=shmget((key_t)4321, sizeof(struct user), 0666|IPC_CREAT);
@@ -50,28 +44,18 @@ int main()
 		fprintf(stderr, "\nshmget() failed!!!\n");
 		return 0;
 	}
-	
-	
-	
-	
-	
+
 	shm[0]=shmat(shmid[0], (void *)0, 0);
 	shm[1]=shmat(shmid[1], (void *)0, 0);
-	
+
 	if(shm[0]==(void *)-1||shm[1]==(void *)-1)
 	{
 		fprintf(stderr, "\nshmat() failed!!!\n");
 		return 0;
 	}
-	
-	
-	
-	
-	printf("\nMemories attached at %X\t&\t%X\n", (int)shm[0], (int)shm[1]);
-	
-	
-	
-	
+
+	printf("\nMemories attached at %lu\t&\t%lu\n", (unsigned long)shm[0], (unsigned long)shm[1]);
+
 	usr[0]=(struct user*)shm[0];
 
 	if(usr[0]->state==19||usr[0]->state==23)
@@ -83,7 +67,7 @@ int main()
 		usr[me]->state=19;
 		printf("\nYou were the second user to connect\n");
 	}
-	
+
 	else
 	{
 		me=0;
@@ -94,16 +78,11 @@ int main()
 		printf("\nYou are the first user to connect\n");
 	}
 
-
-
-
-
 	printf("\nEnter your username: ");
 	__fpurge(stdin);
 	scanf("%s", buf);
 	strncpy(usr[me]->usrname, buf, 15);
 	usr[me]->state=23;
-	
 
 	if(usr[you]->state!=19&&usr[you]->state!=23)
 	{
@@ -116,7 +95,6 @@ int main()
 		printf("\nThe other user connected!!!\n");
 	}
 
-
 	if(usr[you]->state!=23)
 	{
 		printf("\nWaiting for the other user to log in...");
@@ -128,8 +106,7 @@ int main()
 		printf("\nThe other user logged in!!!\n");
 	}
 
-
-	WINDOW *chat, *txtbox, *status;
+	WINDOW *chat, *txtbox/*, *status*/;
 	time_t now;
 	initscr();
 	clear();
@@ -190,7 +167,7 @@ int main()
 				mvwdelch(txtbox, prey, prex-2);
 				wclrtoeol(txtbox);
 			}
-			
+
 			if((ch!=-1)&&(ch!=127))
 				buf[j++]=ch;
 			if(usr[you]->state==3)
@@ -253,8 +230,6 @@ int main()
 		usr[me]->state=3;
 	endwin();
 
-
-
 	if((usr[me]->state==3))
 	{
 		if((shmdt(shm[0])==-1)||(shmdt(shm[1])==-1))
@@ -271,6 +246,6 @@ int main()
 	}
 
 	printf("\nChat successfully ended\n");
-	
+
 	return 0;
 }
