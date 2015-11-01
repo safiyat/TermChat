@@ -11,7 +11,7 @@ Ensure that your system has ncurses library installed.
 In case it is not, run
    `sudo apt-get install libncurses5-dev` for Ubuntu-like systems and,
 
-   `sudo yum install ncurses-devel` for Fedora/Red Hat like systems.
+   `sudo dnf install ncurses-devel` for Fedora/Red Hat like systems.
 
 
 ### For compilation
