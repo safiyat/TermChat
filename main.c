@@ -3,9 +3,13 @@
 #include<unistd.h>
 #include<stdlib.h>
 #include<stdio.h>
-#include<stdio_ext.h>
 #include<string.h>
 #include<sys/shm.h>
+
+#ifndef __APPLE__
+#include<stdio_ext.h>
+#else
+#endif
 
 #define SIZE 2048
 
@@ -36,8 +40,8 @@ int main()
 	usr[0]=usr[1]=(struct user *)NULL;
 	name=-1;
 	
-	shmid[0]=shmget((key_t)1234, sizeof(struct user), 0666|IPC_CREAT);
-	shmid[1]=shmget((key_t)4321, sizeof(struct user), 0666|IPC_CREAT);
+	shmid[0]=shmget((key_t)12345, sizeof(struct user), 0666|IPC_CREAT);
+	shmid[1]=shmget((key_t)54321, sizeof(struct user), 0666|IPC_CREAT);
 	
 	if(shmid[0]==-1||shmid[1]==-1)
 	{
@@ -79,7 +83,11 @@ int main()
 	}
 
 	printf("\nEnter your username: ");
+	#ifndef __APPLE__
 	__fpurge(stdin);
+        #else
+	fpurge(stdin);
+        #endif
 	scanf("%s", buf);
 	strncpy(usr[me]->usrname, buf, 15);
 	usr[me]->state=23;
@@ -230,7 +238,7 @@ int main()
 		usr[me]->state=3;
 	endwin();
 
-	if((usr[me]->state==3))
+	if(usr[me]->state==3)
 	{
 		if((shmdt(shm[0])==-1)||(shmdt(shm[1])==-1))
 		{

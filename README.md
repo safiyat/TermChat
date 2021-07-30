@@ -17,4 +17,6 @@ In case it is not, run
 ### For compilation
 Run the compiler with the `lcurses` or `lncurses` switch to link against the curses library.
 
+On mac: `gcc -lncurses main.c`
+
 Ensure that you add the switch after the name of the C program. This is because object files and libraries are linked in order in a single pass.
